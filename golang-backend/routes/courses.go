@@ -12,5 +12,5 @@ func CategoryRoutes(app *fiber.App) {
 	courses.Delete("/delete/:id", handlers.DeleteCourse)
 	courses.Put("/update/:id", handlers.UpdateCourse)
 	courses.Get("/", handlers.GetAllCourses)
-	// category.Get("/:id", handlers.GetAllProductByCategory)
+	courses.Get("/:id", handlers.GetCourseByID)
 }

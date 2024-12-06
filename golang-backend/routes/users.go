@@ -8,6 +8,7 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
+	app.Get("/", handlers.GetAllUsers)
 	app.Post("/register", handlers.Register)
 	app.Post("/login", handlers.Login)
 	app.Delete("/delete/:id", handlers.DeleteUser)
