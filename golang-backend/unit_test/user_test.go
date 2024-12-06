@@ -1,6 +1,7 @@
 package unit_test
 
 import (
+	"latihan-golang/handlers"
 	"latihan-golang/models"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +19,7 @@ func TestLoginValidation(t *testing.T) {
 	app := fiber.New()
 
 	// Test Login Handler
-	app.Post("/login", Login)
+	app.Post("/login", handlers.Login)
 
 	// Test case untuk valid login
 	t.Run("Valid Login", func(t *testing.T) {
