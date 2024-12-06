@@ -45,8 +45,8 @@ const goToLoginPage = () => {
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a href="#" class="flex items-center mb-6 text-2xl font-bold text-gray-900 dark:text-white">
                 <a href="#" class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
-                <img class="w-40 object-cover " src="/public/logo-eduparx.png"
-                    alt="logo">
+                <!-- <img class="w-40 object-cover " src="/public/logo-eduparx.png"
+                    alt="logo"> -->
             </a>
             </a>
             <div

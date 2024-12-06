@@ -17,7 +17,7 @@ export const registerApi = async (email: string, password: string): Promise<bool
 // Login API 
 export const loginApi = async (email: string, password: string): Promise<LoginResponseTypes> => {
   try {
-    const response = await axios.post<LoginResponseTypes>('https://pipe.dev.dtaclass.id/api/auth/login', {
+    const response = await axios.post<LoginResponseTypes>('http://localhost:3000/login', {
       email,
       password,
     });
