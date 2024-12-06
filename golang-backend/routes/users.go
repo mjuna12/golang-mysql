@@ -8,11 +8,10 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	// Register Routes
 	app.Post("/register", handlers.Register)
-	// Login Routes
 	app.Post("/login", handlers.Login)
-	// Route yang memerlukan autentikasi
+	app.Delete("/delete/:id", handlers.DeleteUser)
+	app.Put("/update/:id", handlers.UpdateUser)
 	app.Get("/protected", middleware.JWTProtected, func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "This is a protected route"})
 	})

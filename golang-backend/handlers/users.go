@@ -72,7 +72,9 @@ func Login(c *fiber.Ctx) error {
 	// Cek user berdasarkan email
 	var user models.User
 	if err := database.DB.Where("email = ?", loginReq.Email).First(&user).Error; err != nil {
-		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{"message": "Invalid email or password"})
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Invalid email or password",
+		})
 	}
 
 	// Periksa password
@@ -89,5 +91,69 @@ func Login(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "Login successful",
 		"token":   token,
+	})
+}
+
+func DeleteUser(c *fiber.Ctx) error {
+	userID := c.Params("id")
+
+	// Mencari user berdasarkan ID
+	var user models.User
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+			"message": "User not found",
+		})
+	}
+
+	// Menghapus user dari database
+	if err := database.DB.Delete(&user).Error; err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to delete user",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "User deleted successfully",
+	})
+}
+
+func UpdateUser(c *fiber.Ctx) error {
+	// Mendapatkan ID dari URL params
+	userID := c.Params("id")
+
+	// Mencari user berdasarkan ID
+	var user models.User
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+			"message": "User not found",
+		})
+	}
+
+	// Memparsing body request untuk update data
+	var updateData models.User
+	if err := c.BodyParser(&updateData); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid input",
+			"error":   err.Error(),
+		})
+	}
+
+	user.Name = updateData.Name
+	user.Email = updateData.Email
+	user.PhoneNumber = updateData.PhoneNumber
+	user.Address = updateData.Address
+
+	// Menyimpan perubahan di database
+	if err := database.DB.Save(&user).Error; err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update user",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "User updated successfully",
+		"user":    user,
 	})
 }

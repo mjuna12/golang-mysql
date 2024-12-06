@@ -7,10 +7,10 @@ import (
 )
 
 func CategoryRoutes(app *fiber.App) {
-	category := app.Group("/courses")
-	category.Post("/create", handlers.CreateCourse)
-	category.Delete("/delete/:id", handlers.DeleteCourse)
-	category.Put("/update/:id", handlers.UpdateCourse)
-	category.Get("/", handlers.GetAllCourses)
+	courses := app.Group("/courses")
+	courses.Post("/create", handlers.CreateCourse)
+	courses.Delete("/delete/:id", handlers.DeleteCourse)
+	courses.Put("/update/:id", handlers.UpdateCourse)
+	courses.Get("/", handlers.GetAllCourses)
 	// category.Get("/:id", handlers.GetAllProductByCategory)
 }
