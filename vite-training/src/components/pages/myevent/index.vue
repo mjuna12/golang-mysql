@@ -1,40 +1,84 @@
-<script setup lang="ts">
-import { useAuth } from '../../../store/auth';
-import Navbar from '../../../components/global/navbar/index.vue';
-import { onMounted } from 'vue';
-import Button from '../../global/button/index.vue'
-import { useRouter } from 'vue-router';
-// import Card from '../../global/card/index.vue'
-
-const authStore = useAuth();
-const router = useRouter();
-
-const goToDetail = (id:number) => {
-  router.push({ name: 'Detail', params: { id } });
-}
-
-onMounted(() => {
-  authStore.getMyEvent();
-});
-</script>
-
 <template>
-  <Navbar />
-  <div class="dark:bg-gray-900 pl-12 space-y-8">
-    <h1 class="text-3xl font-bold mb-6 dark:text-white flex items-center justify-center">My Event</h1>
-    <div v-for="(item, index) in authStore.list_myevent" :key="index" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  transform transition-all duration-300 ease-in hover:scale-105">
-        <a href="#" class="flex-shrink-0">
-          <img class="rounded-t-lg w-full h-48 object-cover" :src="item?.event?.event_picture" alt="Event Image" />
-        </a>
-        <div class="flex-grow p-5 flex flex-col justify-between">
-          <a href="#" class="mb-2">
-            <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ item?.event?.event_name }}</h5>
-          </a>
-          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-6">{{ item?.event?.event_desc }}</p>
-          <div class="space-y-4">
-          <Button text="Read More" type="primary" customClass="w-full text-white bg-slate-700 rounded-lg hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300 dark:bg-slate-600 dark:hover:bg-slate-700 dark:focus:ring-blue-800" @click="goToDetail(item?.event.event_id)"/>
-        </div>  
-        </div>
+  <div class="chart-container">
+    <div v-if="loading" class="loading">Loading...</div>
+    <div v-else>
+      <div v-if="chartData && chartData.labels.length">
+        <BarChart :chart-data="chartData" :options="chartOptions" />
+      </div>
+      <div v-else>
+        <p>No data available</p>
+      </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js";
+import axios from "axios";
+
+// Register chart.js components
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+const chartData = ref<any>(null);
+const chartOptions = ref<any>({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    tooltip: {
+      callbacks: {
+        label: function (tooltipItem: any) {
+          return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+        },
+      },
+    },
+  },
+});
+
+const loading = ref(true);
+
+const fetchData = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/soal/1");
+    const data = response.data.data; // Assuming response contains the 'data' array as per the sample
+
+    // Prepare chart data
+    chartData.value = {
+      labels: data.map((item: any) => item.course.course_name), // Courses
+      datasets: [
+        {
+          label: "Jumlah Peserta Didik",
+          data: data.map((item: any) => item.user_courses.length), // Number of students
+          backgroundColor: "rgba(75, 192, 192, 0.2)", // Bar color
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    loading.value = false; // Data loaded
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
+</script>
+
+<style scoped>
+.chart-container {
+  width: 100%;
+  height: 400px;
+}
+
+.loading {
+  font-size: 1.5em;
+  color: #aaa;
+}
+</style>

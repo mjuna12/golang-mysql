@@ -5,11 +5,12 @@ export type RegisterResponseTypes = {
 
 export type LoginResponseTypes = {
   message: string;
-  results: {
-    access_token: string;
-    token_type: string;
-    expires_in: string;
-  };
+  token: string;
+  // results: {
+  //   access_token: string;
+  //   token_type: string;
+  //   expires_in: string;
+  // };
 };
 
 export type EventTypes = {

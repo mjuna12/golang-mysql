@@ -41,7 +41,7 @@ onMounted(() => {
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="https://eduparx.id/home" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <img class="mr-4 w-40 object-cover" src="/public/logo-eduparx.png" alt="logo" />
+        Diskominfo
       </a>
       <div class="flex items-center space-x-4">
         <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">

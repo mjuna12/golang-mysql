@@ -53,7 +53,7 @@ export const useAuth = defineStore("auth", {
       this.error = null;
       try {
         const response = await loginApi(email, password);
-        this.setToken(response.results.access_token);
+        this.setToken(response.token);
         return true;
       } catch (err: any) {
         this.error = err.message;
