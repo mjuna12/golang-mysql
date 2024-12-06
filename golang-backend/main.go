@@ -27,6 +27,7 @@ func main() {
 	routes.SetupRoutes(app)
 	routes.ProductRoutes(app)
 	routes.CategoryRoutes(app)
+	routes.SoalRoutes(app)
 
 	// Jalankan server pada port 3000
 	app.Listen(":3000")
